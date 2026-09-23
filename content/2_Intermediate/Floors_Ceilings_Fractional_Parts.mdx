@@ -1,0 +1,197 @@
+---
+id: floors-and-ceilings
+title: Floors, Ceilings, and Fractional Parts
+author: Siddharth Vegesna
+description: The floor, ceiling, and fractional part functions, their key properties, and the standard contest techniques for equations and sums involving them.
+prerequisites: []
+---
+
+## Overview
+
+The floor, ceiling, and fractional part functions show up all over competition math: counting multiples, finding the power of a prime in $n!$, solving strange-looking equations, and evaluating sums that seem impossible at first. Most of these problems come down to a handful of ideas, which this module covers.
+
+## Definitions
+
+- **Floor**: $\lfloor x \rfloor$ is the greatest integer less than or equal to $x$.
+- **Ceiling**: $\lceil x \rceil$ is the least integer greater than or equal to $x$.
+- **Fractional part**: $\{x\} = x - \lfloor x \rfloor$, which always satisfies $0 \le \{x\} < 1$.
+
+So every real number splits as
+
+$$
+x = \lfloor x \rfloor + \{x\},
+$$
+
+an integer part plus a fractional part.
+
+*Examples:*
+
+$$
+\lfloor 3.7 \rfloor = 3, \quad \lfloor -3.7 \rfloor = -4, \quad \lceil 3.2 \rceil = 4, \quad \lceil -3.2 \rceil = -3, \quad \{-3.7\} = 0.3
+$$
+
+Be careful with negative numbers: the floor always rounds **down** (toward $-\infty$), not toward $0$. That's why $\{-3.7\} = 0.3$ and not $0.7$.
+
+## Key Properties
+
+Let $x, y$ be real numbers and $n$ be an integer.
+
+**1. The defining inequality**
+
+$$
+\lfloor x \rfloor = n \iff n \le x < n + 1 \iff x - 1 < n \le x
+$$
+
+Almost every floor problem is solved by turning the floor back into this inequality.
+
+**2. Integers slide out**
+
+$$
+\lfloor x + n \rfloor = \lfloor x \rfloor + n, \qquad \{x + n\} = \{x\}
+$$
+
+This is **not** true when $n$ is not an integer. The second identity says the fractional part repeats with period $1$.
+
+**3. Floor and ceiling are related**
+
+$$
+\lceil x \rceil = -\lfloor -x \rfloor, \qquad \lceil x \rceil - \lfloor x \rfloor = \begin{cases} 0 & x \in \mathbb{Z} \\ 1 & x \notin \mathbb{Z} \end{cases}
+$$
+
+**4. Negatives**
+
+$$
+\lfloor x \rfloor + \lfloor -x \rfloor = \begin{cases} 0 & x \in \mathbb{Z} \\ -1 & x \notin \mathbb{Z} \end{cases}, \qquad \{x\} + \{-x\} = \begin{cases} 0 & x \in \mathbb{Z} \\ 1 & x \notin \mathbb{Z} \end{cases}
+$$
+
+**5. Sums**
+
+$$
+\lfloor x \rfloor + \lfloor y \rfloor \le \lfloor x + y \rfloor \le \lfloor x \rfloor + \lfloor y \rfloor + 1
+$$
+
+The extra $1$ appears exactly when $\{x\} + \{y\} \ge 1$.
+
+**6. Nested floors** (for a positive integer $n$)
+
+$$
+\left\lfloor \frac{\lfloor x \rfloor}{n} \right\rfloor = \left\lfloor \frac{x}{n} \right\rfloor
+$$
+
+## Technique 1: Write $x = n + f$
+
+When an equation mixes $x$, $\lfloor x \rfloor$, and $\{x\}$, set $n = \lfloor x \rfloor$ (an integer) and $f = \{x\}$ (with $0 \le f < 1$). You now have an equation in two variables with strong restrictions on each.
+
+*Example:* Solve $2\lfloor x \rfloor = x + 2\{x\}$.
+
+*Solution:* With $x = n + f$, the equation becomes $2n = n + f + 2f$, so $n = 3f$. Since $0 \le f < 1$, we need $0 \le n < 3$, so $n \in \{0, 1, 2\}$ and $f = \frac{n}{3}$. This gives
+
+$$
+x = 0, \ \frac{4}{3}, \ \frac{8}{3}.
+$$
+
+*Example (Canada 1999):* Solve $4x^2 - 40\lfloor x \rfloor + 51 = 0$.
+
+*Solution:* Let $n = \lfloor x \rfloor$. Then $4x^2 = 40n - 51$, so $40n \ge 51$ and $n \ge 2$, meaning $x > 0$. Squaring $n \le x < n + 1$ gives
+
+$$
+4n^2 \le 40n - 51 < 4(n+1)^2.
+$$
+
+The left inequality is $4n^2 - 40n + 51 \le 0$, which gives $1.5 \le n \le 8.5$. The right inequality is $4n^2 - 32n + 55 > 0$, which gives $n < 2.5$ or $n > 5.5$. So $n \in \{2, 6, 7, 8\}$, and $x = \frac{\sqrt{40n - 51}}{2}$ gives
+
+$$
+x = \frac{\sqrt{29}}{2}, \ \frac{\sqrt{189}}{2}, \ \frac{\sqrt{229}}{2}, \ \frac{\sqrt{269}}{2}.
+$$
+
+Always check at the end that each answer really has $\lfloor x \rfloor = n$.
+
+## Technique 2: Counting with Floors
+
+The number of multiples of $d$ in $\{1, 2, \ldots, n\}$ is $\left\lfloor \frac{n}{d} \right\rfloor$. This leads to **Legendre's formula**: the exponent of a prime $p$ in $n!$ is
+
+$$
+\nu_p(n!) = \left\lfloor \frac{n}{p} \right\rfloor + \left\lfloor \frac{n}{p^2} \right\rfloor + \left\lfloor \frac{n}{p^3} \right\rfloor + \cdots
+$$
+
+*Example:* How many zeros does $100!$ end in?
+
+*Solution:* There are more factors of $2$ than $5$, so we count factors of $5$:
+
+$$
+\left\lfloor \frac{100}{5} \right\rfloor + \left\lfloor \frac{100}{25} \right\rfloor = 20 + 4 = 24.
+$$
+
+## Technique 3: Group Terms with Equal Floors
+
+In a sum of floors, the floor stays constant over long stretches. Count how many terms share each value.
+
+*Example:* Evaluate $\displaystyle\sum_{k=1}^{100} \lfloor \sqrt{k} \rfloor$.
+
+*Solution:* $\lfloor \sqrt{k} \rfloor = m$ exactly when $m^2 \le k \le (m+1)^2 - 1$, which is $2m + 1$ values of $k$. For $m = 1, \ldots, 9$ this covers $k = 1, \ldots, 99$, and $k = 100$ contributes $10$. So the sum is
+
+$$
+\sum_{m=1}^{9} m(2m+1) + 10 = 2 \cdot 285 + 45 + 10 = 625.
+$$
+
+## Technique 4: Floor Sums via Fractional Parts
+
+Since $\lfloor x \rfloor = x - \{x\}$, a hard floor sum can be split into an easy sum minus a sum of fractional parts. The fractional parts are often easy to handle because of their structure.
+
+*Example:* If $p$ and $q$ are relatively prime positive integers, find
+
+$$
+S = \sum_{k=1}^{p-1} \left\lfloor \frac{kq}{p} \right\rfloor.
+$$
+
+*Solution:* Write each term as $\frac{kq}{p} - \left\{ \frac{kq}{p} \right\}$. The first part sums to
+
+$$
+\frac{q}{p} \cdot \frac{(p-1)p}{2} = \frac{q(p-1)}{2}.
+$$
+
+For the fractional parts, note that $\left\{ \frac{kq}{p} \right\} = \frac{r_k}{p}$, where $r_k$ is the remainder when $kq$ is divided by $p$. Since $\gcd(p, q) = 1$, the remainders $r_1, \ldots, r_{p-1}$ are exactly $1, 2, \ldots, p-1$ in some order. So the fractional parts sum to $\frac{1}{p} \cdot \frac{(p-1)p}{2} = \frac{p-1}{2}$, and
+
+$$
+S = \frac{q(p-1)}{2} - \frac{p-1}{2} = \frac{(p-1)(q-1)}{2}.
+$$
+
+*Alternate solution:* Pair $k$ with $p - k$. Since $\frac{kq}{p}$ is never an integer, Property 4 gives
+
+$$
+\left\lfloor \frac{kq}{p} \right\rfloor + \left\lfloor q - \frac{kq}{p} \right\rfloor = q + \left( \left\lfloor \frac{kq}{p} \right\rfloor + \left\lfloor -\frac{kq}{p} \right\rfloor \right) = q - 1,
+$$
+
+so $2S = (p-1)(q-1)$.
+
+## Technique 5: Hermite's Identity
+
+For any real $x$ and positive integer $n$,
+
+$$
+\lfloor x \rfloor + \left\lfloor x + \frac{1}{n} \right\rfloor + \left\lfloor x + \frac{2}{n} \right\rfloor + \cdots + \left\lfloor x + \frac{n-1}{n} \right\rfloor = \lfloor nx \rfloor.
+$$
+
+*Proof:* Let $f(x)$ be the left side minus the right side. Replacing $x$ with $x + \frac{1}{n}$ shifts the left-side terms by one position, turning $\lfloor x \rfloor$ into $\lfloor x + 1 \rfloor = \lfloor x \rfloor + 1$, and turns the right side into $\lfloor nx + 1 \rfloor = \lfloor nx \rfloor + 1$. So $f\left(x + \frac{1}{n}\right) = f(x)$. For $0 \le x < \frac{1}{n}$, every term is $0$, so $f(x) = 0$. Since $f$ repeats with period $\frac{1}{n}$, $f(x) = 0$ for all $x$. $\blacksquare$
+
+*Example:* Compute $\displaystyle\sum_{k=0}^{\infty} \left\lfloor \frac{1000 + 2^k}{2^{k+1}} \right\rfloor$.
+
+*Solution:* Hermite's identity with $n = 2$ says $\lfloor y \rfloor + \left\lfloor y + \frac{1}{2} \right\rfloor = \lfloor 2y \rfloor$, so $\left\lfloor y + \frac{1}{2} \right\rfloor = \lfloor 2y \rfloor - \lfloor y \rfloor$. With $y = \frac{1000}{2^{k+1}}$, each term is
+
+$$
+\left\lfloor \frac{1000}{2^{k+1}} + \frac{1}{2} \right\rfloor = \left\lfloor \frac{1000}{2^k} \right\rfloor - \left\lfloor \frac{1000}{2^{k+1}} \right\rfloor.
+$$
+
+The sum telescopes to $\left\lfloor \frac{1000}{2^0} \right\rfloor = 1000$.
+
+## Common Mistakes
+
+- $\lfloor -x \rfloor \ne -\lfloor x \rfloor$ in general. For example, $\lfloor -2.5 \rfloor = -3$.
+- $\{-x\} \ne -\{x\}$. The fractional part is never negative.
+- $\lfloor x + y \rfloor$ can be $\lfloor x \rfloor + \lfloor y \rfloor + 1$. The floor does not split over addition.
+- $\lfloor xy \rfloor \ne \lfloor x \rfloor \lfloor y \rfloor$ in general.
+- After solving with $n = \lfloor x \rfloor$, always check that each solution really has $\lfloor x \rfloor = n$.
+
+## Practice Problems
+
+<Problems problems="practice" />
